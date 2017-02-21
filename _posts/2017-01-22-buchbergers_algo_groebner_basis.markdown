@@ -66,7 +66,7 @@ As you can imagine, systems of polynomial equations occur in all kinds of applic
 
 - Optimization problems where the objective function and constraints are polynomial equations. Minimizing sum of squared errors immediately comes to mind.
 - Robotic motion planning - let's imagine a robotic arm consisting of various limbs. We can imagine that the length of each limb will be fixed, so the range of motion it can perform in isolation will be restricted to a circle at the hinge. When we consider many such limbs and want to find the best way to reach for an object, we get a system of polynomial equations.
-- Finding the minimum number of colors needed to paint a graph such that no adjacent regions have the same color. This is called the chromatic number of the graph.
+- Finding the minimum number of colors needed to paint a graph such that no adjacent vertices have the same color. This is called the chromatic number of the graph.
 
 ## Implementation in C\#
 The algorithms provided in the CLO book were implemented in [this git repo][Groebner-repo]. While there are other implementations of Buchbergers algorithm on Github, I felt a new one was needed since - 
