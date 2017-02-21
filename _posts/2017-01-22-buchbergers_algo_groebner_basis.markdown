@@ -4,12 +4,19 @@ title:  "Solve a system of polynomial equations - Buchbergers algorithm for comp
 date:   2017-01-22 19:34:40 -0800
 categories: jekyll update
 ---
+<head>
+    <script type="text/javascript"
+            src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+</head>
+
+
 ## What are polynomials?
 First, let's define very quickly some basic terms. 
 
 
 - Monomials are functions in one or more variables where we are only allowed multiplication and non-negative integer exponents. For example, $$x^2 y$$ is a monomial in the variables $$x$$ and $$y$$.
-- Polynomials are functions in one or more variables that involve the operations of addition, subtraction, multiplication and non-negative integer exponents. This means, they are basically sume of monomial terms. Here is an example of a polynomial in three variables, $$x, y, z$$.
+- Polynomials are functions in one or more variables that involve the operations of addition, subtraction, multiplication and non-negative integer exponents. This means, they are basically sums of monomial terms. Here is an example of a polynomial in three variables, $$x, y, z$$.
 
 $$5x^2 y + y^2 - z - 3$$
 
