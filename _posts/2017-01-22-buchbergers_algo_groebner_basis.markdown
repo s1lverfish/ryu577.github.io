@@ -1,5 +1,6 @@
 ---
 layout: post
+comments: true
 title:  "Solve a system of polynomial equations - Buchbergers algorithm for computing Groebner basis"
 date:   2017-01-22 19:34:40 -0800
 categories: jekyll update
