@@ -115,7 +115,7 @@ Polynomial - 2
 Notice that the last polynomial involves only $$z$$. We can use it to find possible solutions for this variable. The second to last one then, contains only $$z$$ and $$y$$. So, the values of $$z$$ calculated from the previous equation can be substituted to get possible values of $$y$$. Similarly, the first equation can be used to calculate $$x$$.
 
 
-Now, let's peer at the machinery behind this. Here is the simplest (and most inefficient) version of Buchbergers algorithm as provided in section 2.7, Theorem 2 for computing the Groebner basis ($$g_1, g_2, \dots , g_t$$) of a polynomial ideal, starting with an arbitrary basis ($$f_1, f_2, \dots , f_s$$). Don't peer at it too closely here before reading the background in the book. This is meant as an illustration of how the algorithms in the book translate to the C# code.
+Now, let's peer at the machinery behind this. Here is the simplest (and most inefficient) version of Buchbergers algorithm as provided in section 2.7, Theorem 2 for computing the Groebner basis ($$g_1, g_2, \dots , g_t$$) of a polynomial ideal, starting with an arbitrary basis ($$f_1, f_2, \dots , f_s$$). Don't peer at it too closely here before reading the background in the book. This is meant as an illustration of how the algorithms in the book translate to the C# code. Note that the more efficient version of the Buchbergers algorithm given in theorem 11 is also implemented.
 
 <br>
 
