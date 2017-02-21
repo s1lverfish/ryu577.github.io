@@ -18,8 +18,8 @@ First, let's define very quickly some basic terms.
 - Monomials are functions in one or more variables where we are only allowed multiplication and non-negative integer exponents. For example, $$x^2 y$$ is a monomial in the variables $$x$$ and $$y$$.
 - Polynomials are functions in one or more variables that involve the operations of addition, subtraction, multiplication and non-negative integer exponents. This means, they are basically sums of monomial terms. Here is an example of a polynomial in three variables, $$x, y, z$$.
 
-$$5x^2 y + y^2 - z - 3$$
-
+$$ 5x^2 y + y^2 - z - 3$$
+\\[ 5x^2 y + y^2 - z - 3 \\]
 
 
 ## Linear Ideals
