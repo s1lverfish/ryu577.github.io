@@ -21,6 +21,7 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: rohitpandey576
 github_username:  ryu577
+comments: true
 
 # Build settings
 markdown: kramdown
@@ -31,3 +32,6 @@ exclude:
   - Gemfile
   - Gemfile.lock
 #permalink: /buchbergers_algo_groebner_basis/
+
+disqus:
+  shortname: Github-blog
