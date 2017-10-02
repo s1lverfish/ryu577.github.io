@@ -8,7 +8,6 @@ categories: jekyll update
 
 This blog is based on a [YouTube video][gradient] explaining why the gradient is the direction of steepest ascent. Check it out.
 
-
 ## I) Why bother?
 First, let's get what might be the elephant in the room for some out of the way. Why should you read this blog? First, because it has awesome animations like figure 1 below. Don't you want to know what's going on in this picture?
 
