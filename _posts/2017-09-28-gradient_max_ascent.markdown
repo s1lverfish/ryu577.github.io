@@ -34,15 +34,6 @@ And the implicit assumption here of course is that we can control the thing we w
 There is probably some equation that describes this graph. Say $$f(x,o) = 0$$. But in the context of optimization, we need to express it in the form: $$o = f(x)$$ (assuming the original equation is conducive to separating $$o$$ from $$x$$ in this way). Then, we can ask - "what value of $$x$$ corresponds to the best $$o$$?". If we have a nice continuous function, then one thing we can say for sure is that at this special $$x$$, the derivative of $$o = f(x)$$ (generally denoted by $$f'(x)$$) will be zero. Now if you don't know what a derivative is (it's the ratio of the amount $$o$$ gets perturbed to the perturbation in $$x$$, when we purposely perturb $$x$$) and why it should be zero when we acheive the best $$o$$, I'd recommend checking out [this video][derivatives] that covers this in detail.
 
 
-
-[//]: <> (<object style="height: 390px; width: 640px">
-<param name="movie" value="http://www.youtube.com/v/llonP6K0YHQ?version=3">
-<param name="allowFullScreen" value="true">
-<param name="allowScriptAccess" value="always">
-<embed src="http://www.youtube.com/v/llonP6K0YHQ?version=3" type="application/x-shockwave-flash" allowfullscreen="true" allowScriptAccess="always" width="640" height="390"></object>)
-
-
-
 ## III) What is a gradient
 
 When the thing we are optimizing depends on more than one variable, the concept of the derivative extends to a gradient. So, if $$o$$ from above depends on $$x$$ and $$y$$, we can collect them into a single vector $$\vec{u} = [x, y]$$. So, with $$o = f(x,y) = f(\vec{u})$$, the gradient of $$o$$ becomes $$\Delta f(u) = [\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y} ]$$. And just like with the derivative, we can be sure that the value of $$\vec{u}$$ that will optimize $$o$$ will have both components of the gradient equaling zero. 
