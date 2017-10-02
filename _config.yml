@@ -34,3 +34,5 @@ exclude:
 
 disqus:
    shortname: github-io-2
+
+future: true
