@@ -6,14 +6,7 @@ date:   2017-09-28 16:34:40 -0800
 categories: jekyll update
 ---
 
-This blog is based on a YouTube video explaining why the gradient is the direction of steepest ascent. Check it out.
-
-<object style="height: 390px; width: 640px">
-<param name="movie" value="http://www.youtube.com/v/OV7c6S32IDU?version=3">
-<param name="allowFullScreen" value="true">
-<param name="allowScriptAccess" value="always">
-<embed src="http://www.youtube.com/v/OV7c6S32IDU?version=3" type="application/x-shockwave-flash" allowfullscreen="true" allowScriptAccess="always" width="640" height="390"></object>
-
+This blog is based on a [YouTube video][gradient] explaining why the gradient is the direction of steepest ascent. Check it out.
 
 
 ## I) Why bother?
@@ -32,7 +25,6 @@ As I mentioned in the last section, optimization is awesome. It involves taking 
 And the implicit assumption here of course is that we can control the thing we want to optimize in some way. Let's say it depends on some variable (say $$\vec{x}$$) which is in our control. So, at every value of $$\vec{x}$$, there is some value of $$o$$ (and we want to find the $$\vec{x}$$ that makes $$o$$ the best). 
 
 There is probably some equation that describes this graph. Say $$f(x,o) = 0$$. But in the context of optimization, we need to express it in the form: $$o = f(x)$$ (assuming the original equation is conducive to separating $$o$$ from $$x$$ in this way). Then, we can ask - "what value of $$x$$ corresponds to the best $$o$$?". If we have a nice continuous function, then one thing we can say for sure is that at this special $$x$$, the derivative of $$o = f(x)$$ (generally denoted by $$f'(x)$$) will be zero. Now if you don't know what a derivative is (it's the ratio of the amount $$o$$ gets perturbed to the perturbation in $$x$$, when we purposely perturb $$x$$) and why it should be zero when we acheive the best $$o$$, I'd recommend checking out [this video][derivatives] that covers this in detail.
-
 
 ## III) What is a gradient
 
@@ -126,4 +118,4 @@ I'll leave you with this visualization demonstrating how as we change the plane,
 
 [taylor]: http://fourier.eng.hmc.edu/e176/lectures/NM/node45.html
 [derivatives]: http://www.youtube.com/v/llonP6K0YHQ
-
+[gradient]: http://www.youtube.com/v/OV7c6S32IDU?version=3
