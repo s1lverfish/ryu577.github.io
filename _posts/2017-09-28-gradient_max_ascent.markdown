@@ -33,11 +33,16 @@ And the implicit assumption here of course is that we can control the thing we w
 
 There is probably some equation that describes this graph. Say $$f(x,o) = 0$$. But in the context of optimization, we need to express it in the form: $$o = f(x)$$ (assuming the original equation is conducive to separating $$o$$ from $$x$$ in this way). Then, we can ask - "what value of $$x$$ corresponds to the best $$o$$?". If we have a nice continuous function, then one thing we can say for sure is that at this special $$x$$, the derivative of $$o = f(x)$$ (generally denoted by $$f'(x)$$) will be zero. Now if you don't know what a derivative is (it's the ratio of the amount $$o$$ gets perturbed to the perturbation in $$x$$, when we purposely perturb $$x$$) and why it should be zero when we acheive the best $$o$$, I'd recommend checking out the video below that covers this in detail.
 
-<object style="height: 390px; width: 640px">
+
+
+[//]: <> (<object style="height: 390px; width: 640px">
 <param name="movie" value="http://www.youtube.com/v/llonP6K0YHQ?version=3">
 <param name="allowFullScreen" value="true">
 <param name="allowScriptAccess" value="always">
 <embed src="http://www.youtube.com/v/llonP6K0YHQ?version=3" type="application/x-shockwave-flash" allowfullscreen="true" allowScriptAccess="always" width="640" height="390"></object>
+)
+
+<iframe width="420" height="315" src="http://www.youtube.com/embed/llonP6K0YHQ" frameborder ="0" allowfullscreen></iframe>
 
 
 ## III) What is a gradient
