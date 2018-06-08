@@ -117,7 +117,7 @@ at ten minutes and we're sure we want to decrease it - so evaluate thresholds le
 Since we have complete information for all our data at the thresholds lower than 10 minutes that we wish to evaluate, we know exactly what would have happened if they were
 enforced. 
 
-### 3.3. Hybrid approach
+### 3.3. Hybrid approach	
 
 
 ## 4. Modeling hazard rates
