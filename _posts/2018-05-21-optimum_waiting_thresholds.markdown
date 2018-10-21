@@ -180,14 +180,14 @@ In this section, we generate data from a Lomax distribution and see which models
 #### 4.1.1. Deterministic censoring at value less than the optimal threshold.
 
 First, let's see how the Lomax distribution itself does.
-![No censoring]({{ site.url }}/Downloads/opt_thresholds/no_censor_lomax.png)
+![No censoring]({{site.url}}/Downloads/opt_thresholds/no_censor_lomax.png)
 
 Let's start with the simple case where we have no censoring. Let's generate some data from a Lomax distribution. 
 Now, what happens when we apply the non-parametric methods we discussed to this data?
 
 The results are best encapsulated in the figure below:
 
-![No censoring]({{ site.url }}/Downloads/opt_thresholds/no_censor_non_parmtr.png)
+![No censoring]({{site.url}}/Downloads/opt_thresholds/no_censor_non_parmtr.png)
 
 For the Weibull distribution, we get much higher optimal thresholds. For the LogLogistic distribution, we get slightly lower ones. 
 
