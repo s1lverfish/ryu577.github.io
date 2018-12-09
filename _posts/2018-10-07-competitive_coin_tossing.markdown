@@ -1,8 +1,8 @@
 ---
 layout: post
 comments: true
-title:  "Coin toss markov chains"
-date:   2018-10-07 19:02:40 -0800
+title: "Coin toss markov chains"
+date: 2018-10-07 19:02:40 -0800
 categories: jekyll update
 ---
 
@@ -44,7 +44,7 @@ This is what it will look like for me:
 
 $$
 M_3 = \left( \begin{array}{ccc}
-		0.5 & 0.5 & 0  \\
+		0.5 & 0.5 & 0 & \\
 		0.5 & 0 & 0.5 \\
 		0 & 0 & 1
 		\end{array} \right)
@@ -59,7 +59,7 @@ Similarly, you plan on stopping once you reach three consecutive heads. So, your
 
 $$
 M_4 = \left( \begin{array}{ccc}
-		0.5 & 0.5 & 0 & 0  \\
+		0.5 & 0.5 & 0 & 0 & \\
 		0.5 & 0 & 0.5 & 0\\
 		0.5 & 0 & 0 & 0.5\\
 		0 & 0 & 0 & 1
@@ -89,7 +89,7 @@ This argument might give you a feeling of deja-vu since we used the exact same o
 by simply multiplying the $$P_0$$ with $$M_3$$.
 
 $$P_0 M_3 = (1,0,0) \left( \begin{array}{ccc}
-		0.5 & 0.5 & 0  \\
+		0.5 & 0.5 & 0 & \\
 		0.5 & 0 & 0.5 \\
 		0 & 0 & 1
 		\end{array} \right) = (.5,.5,0) = P_1$$
@@ -98,7 +98,7 @@ $$P_0 M_3 = (1,0,0) \left( \begin{array}{ccc}
 Similarly to get $$P_2$$, we multiply $$P_1$$ with $$M_3$$.
 
 $$P_1 M_3 = (.5,.5,0) \left( \begin{array}{ccc}
-		0.5 & 0.5 & 0  \\
+		0.5 & 0.5 & 0 & \\
 		0.5 & 0 & 0.5 \\
 		0 & 0 & 1
 		\end{array} \right) = (.5,.25,.25) = P_2$$
@@ -127,8 +127,7 @@ Let's plot the probabilities that you will be in each of the states as a functio
 
 ![Probability sequences]({{site.url}}/Downloads/CompetitiveCoinToss/probs_seq.png)
 
-In the beginning, the starting state (0 consecutive heads) is obviously at 1.0. But it soon drops to zero. The other two non-absorbing states also
-make a climb initially since the final absorbing state must go through them. However, they quickly fall to zero as all the probability
+In the beginning, the starting state (0 consecutive heads) is obviously at 1.0. But it soon drops to zero. The other two non-absorbing states also make a climb initially since the final absorbing state must go through them. However, they quickly fall to zero as all the probability
 mass is sucked up by the absorbing state (in green).
 
 Here is some simple, self-contained python code that shows how to calculate the probabilities of this sequence getting to the absorbing state as a function of the
@@ -137,21 +136,21 @@ number of tosses (the green line in the plot).
 ```python
 import numpy as np
 
-start = np.array([1,0,0,0])
+start = np.array([1,0,0])
 
 # The transition matrix.
 m_3 = np.matrix([
-	            [.5,.5,0],
-	            [.5,0,.5],
-	            [0,0,1]
-	            ])
+	 [.5,.5,0],
+	 [.5,0,.5],
+	 [0,0,1]
+	 ])
 
 ## Probabilities of getting to absorbing state after n tosses.
 # First raise the matrix to nth power
 # then get the index of absorbing state
 p_n = np.array([np.dot(start, np.linalg.matrix_power(m_3,n))\
-						 [0,3]\
-                         for n in range(100)])#Calculate this upto 100 tosses.
+						 [0,2]\
+                               for n in range(100)])#Calculate this upto 100 tosses.
 ```
 
 The plot will look very similar for the elements of the vector $$P_n$$ of my states. However, my absorbing state (two consecutive heads)
@@ -219,9 +218,9 @@ m_4 = np.matrix([[.5,.5,0,0], [.5,0,.5,0],[.5,0,0,.5], [0,0,0,1]])
 # should be at 0. When it is at 2, q_n_minus_1 should be at 1 and so on.
 # that is why p_n starts with 1 and goes to 100 while q_n_minus_1 starts with 0 and goes to 99.
 p_n = np.array([np.dot(start1, np.linalg.matrix_power(m_3,n))[0,2]\
-                         for n in range(1,101)])
+                                     for n in range(1,101)])
 q_n_minus_1 = np.array([np.dot(start2, np.linalg.matrix_power(m_4,n))[0,2]\
-                         for n in range(100)])
+                                     for n in range(100)])
 
 print("Prob(3 consec heads b4 2 consec heads):" + str(sum(q_n_minus_1*(1-p_n))/2))
 ```
@@ -246,7 +245,7 @@ simply sees more mountains on the other side. In that spirit, we will see what o
 in seeking the answer to this one in the next section (5). 
 
 Also, note that the approach of taking a large sequence formed by repeated matrix multiplication is somewhat
-ugly and inefficient. In section 6, we will improve on this and solve equation (3) in a cleaner, more efficient manner.   
+ugly and inefficient. In section 6, we will improve on this and solve equation (3) in a cleaner, more efficient manner.
 
 
 
@@ -260,7 +259,7 @@ But to even the odds for you, your heads no longer need to be consecutive. As so
 This turns out to be a pretty close contest. Who should a gambler bet their money on?
 
 We can solve this problem in a pretty similar manner to the previous one. Just construct the two Markov chains, use them to calculate 
-the sequences of being in their various states after $$n$$ tosses and plug the sequences into equation (3).  
+the sequences of being in their various states after $$n$$ tosses and plug the sequences into equation (3). & 
 
 My transition matrix will still be the $$M_3$$ defined in section 2. Your transition matrix however, will not be the $$M_4$$ defined there.
 
@@ -270,8 +269,8 @@ at the state you were. In this way, I'm penalized more severely for a tails (I h
 Your new transition matrix, $$O_4$$ will look like this:
 
 $$
-O_4 = \left( \begin{array}{ccc}
-		0.5 & 0.5 & 0 & 0  \\
+O_4 = \left( \begin{array}{cccc}
+		0.5 & 0.5 & 0 & 0 & \\
 		0 & 0.5 & 0.5 & 0\\
 		0 & 0 & 0.5 & 0.5\\
 		0 & 0 & 0 & 1
@@ -367,14 +366,14 @@ from stochproc.competitivecointoss.smallmarkov import *
 ns = np.arange(2,15)
 win_probs = []
 for n in ns:
-    # The losing markov sequence of coin tosses that needs (n-1) heads.
-    lose_seq = MarkovSequence(get_consecutive_heads_mat(n))
-    # The winning markov sequence of coin tosses that needs n heads.
-    win_seq = MarkovSequence(get_consecutive_heads_mat(n+1))
-    # If you multiply the two sequence objects, you get the probability
-    # that the first one beats the second one.
-    win_prob = win_seq*lose_seq
-    win_probs.append(win_prob)
+ 	# The losing markov sequence of coin tosses that needs (n-1) heads.
+ 	lose_seq = MarkovSequence(get_consecutive_heads_mat(n))
+ 	# The winning markov sequence of coin tosses that needs n heads.
+ 	win_seq = MarkovSequence(get_consecutive_heads_mat(n+1))
+ 	# If you multiply the two sequence objects, you get the probability
+ 	# that the first one beats the second one.
+	win_prob = win_seq*lose_seq
+	win_probs.append(win_prob)
 
 plt.plot(ns, win_probs)
 ```
@@ -412,8 +411,8 @@ If the matrix is $$n \times n$$, you can find $$n$$ such directions (including t
 
 This translates to being able to write:
 
-$$\begin{equation}M_3 E =  E \left( \begin{array}{ccc}
-		1 & 0 & 0  \\
+$$\begin{equation}M_3 E = E \left( \begin{array}{ccc}
+		1 & 0 & 0 & \\
 		0 & \lambda_1 & 0 \\
 		0 & 0 & \lambda_2
 		\end{array} \right) \tag{4}\end{equation}$$
@@ -432,7 +431,7 @@ $$\begin{equation}M_3 = E \Lambda E^{-1}\tag{5}\end{equation}$$
 Where
 
 $$\Lambda = \left( \begin{array}{ccc}
-		1 & 0 & 0  \\
+		1 & 0 & 0 & \\
 		0 & \lambda_1 & 0 \\
 		0 & 0 & \lambda_2
 		\end{array} \right)$$
@@ -448,7 +447,7 @@ $$M_3^n = E\Lambda^n E^{-1}$$
 Since $$\Lambda$$ is diagonal, we can write - 
 
 $$\Lambda^n = \left( \begin{array}{ccc}
-		1 & 0 & 0  \\
+		1 & 0 & 0 & \\
 		0 & \lambda_1^n & 0 \\
 		0 & 0 & \lambda_2^n
 		\end{array} \right)$$
@@ -464,7 +463,7 @@ $$\begin{equation}P_n = (1,\lambda_1^n, \lambda_2^n) C \tag{6}\end{equation}$$
 Where $$C$$ is a constant matrix of coefficients given by:
 
 $$C = \left( \begin{array}{ccc}
-		E_{1,1} & 0 & 0  \\
+		E_{1,1} & 0 & 0 & \\
 		0 & E_{1,2} & 0 \\
 		0 & 0 & E_{1,3}
 		\end{array} \right) E^{-1}$$
@@ -503,31 +502,260 @@ As long as we can construct the transition matrices for the two sequences of coi
 get the probability that one of them will beat the other using the approach above.
 
 
+## 7. Other methods
+I alluded earlier that once you climb a mountain, you'll sometimes see other mountains on the other side. But there are probably multiple paths 
+to the top of the mountain you currently on. And climbing via another paths is probably a unique experience in itself.
+
+In this section, we'll therefore consider some other methods to solve our original problem (what is the chance you get to three consecutive heads before
+I get to two consecutive heads?).
+
+## 7.1. A "different" equation
+
+There is a way to tame these processes coming from a completely different direction. By constructing a difference equation 
+(see what I did there? Anyone? Anyone?). Ok, it might be too early for that pun if you haven't heard of difference equations before.
+
+Here is how this goes - consider my sequence of tosses where I'm aiming for two consecutive heads.
+
+Let's see if there is an alternate way to get the sequence of probabilities $$P_n$$ used in equation (3). In particular, let $$a_n$$
+be the probability that I'll reach my goal on the $$n$$th toss.
+
+One thing we can say is that at the time when I reach my goal on the $$n$$th toss, the last two tosses I saw would have both been heads. 
+Also, the third-from-final toss would have had to be a tails (otherwise, I would have won one toss earlier). The probability of this sequence
+of THH is $$\frac{1}{2}\times \frac{1}{2} \times \frac{1}{2} = \frac{1}{8}$$.
+
+Before these three tosses, my probability of winning would have been by definition, $$a_{n-3}$$. But if I am to win in the $$n$$th toss,
+I need to exclude that event. And similarly $$a_{n-4}$$ and so on. This means:
+
+$$a_n=\frac{1}{8}\left(1-\sum_{i=2}^{n-3} a_i\right) = \frac{1}{8}\left(1-\sum_{i=1}^{n-3} a_i\right)$$
+
+The second part of the equality follows since $$a_1 = 0$$ (the probability of reaching two consecutive heads on the first toss is zero).
+
+Now let's define:
+
+$$b_n = \sum_{i=1}^{n} a_i$$
+
+which represents the probability you would have won by the $$n$$th toss.
+
+Plugging this equation into the previous one we get:
+
+$$b_n-b_{n-1} = \frac{1}{8}(1-b_{n-3})$$
+
+This is what I meant by "difference equation" it expresses a relationship for the difference of two consecutive terms of the series.
+
+Simplifying further:
+
+\begin{equation} b_n =  b_{n-1} - \frac{1}{8} b_{n-3} + \frac{1}{8} \tag{9}\end{equation}
+
+Now, we know $$b_n$$ for the first few values of $$n$$. When $$n=0$$, there is no way I would be in my absorbing state of two consecutive tosses. Hence, $$b_0 = 0$$. Even on the first toss, there is no chance I would have tosses two heads surely. So, $$b_1=0$$ as well. When $$n=2$$, there is a chance I would see two consecutive heads. For that, the first two tosses would have be both be heads. The probability of that is $$\frac{1}{2}\times\frac{1}{2} = 0.25$$.
+
+Now, we can use these and equation (9) to calculate the other terms of the sequence. 
+
+$$b_3 = b_2 - \frac{b_0}{8} + \frac{1}{8} = 0.25 + 0.125 = 0.375$$
+
+$$b_4 = b_3 - \frac{b_1}{8} + \frac{1}{8} = 0.375 + 0.125 = 0.5$$
+
+$$b_5 = b_4 - \frac{b_2}{8} + \frac{1}{8} = 0.5+\frac{0.75}{8} = 0.59375$$
+
+You get the idea by now, we can extend this as far as we like to get any $$b_n$$. This is an alternate way to get the sequence 
+we calculated in section 3 ($$P_n[2]$$) and used in section 4 to get the answer. 
+
+But, we still need to patiently iterate all the way to $$n$$ starting from $$n=3$$. This is similar to the way we were patiently multiplying matrices in section 3 to get the sequence of probabilities. However, we found a way in section 6 to replace the iterative method for calculating the probability sequence with a more elegant closed form. Is there a way we can find a closed form for this difference equation as well?
+
+### 7.1.1. Closed form for the difference equation
+
+The standard way to solve a difference equation like (9) is to separate into homogeneous and non-homogeneous parts, solve the homogeneous part using a polynomial guess and then make another guess for how the solution will need to be modified to make it compatible with the original, non-homogeneous equation.
+
+The homogeneous part of $$b_{n}−b_{n−1}=\frac{1}{8}(1−b_{n−3})$$ is given by:
+$$8b_{n}-8b_{n-1}+b_{n-3}=0$$
+ 
+So the characteristic equation is given by:
+
+$$8l^3-8l^2+1=0$$
+
+The roots are given by $$l=\frac{1-\sqrt{5}}{4}, \frac{1+\sqrt{5}}{4},-\frac{1}{2}$$
+
+And the answer can be taken as a constant: $$b_n=c$$. Substituting in 
+$$8b_n+8b_{n-1}-b_{n-3}=1$$
+We have $$c=\frac{1}{15}$$
+
+Therefore the general solution can be written as:
+
+$$b_n=\sigma_1\left(\frac{\sqrt{5}+1}{4}\right)^n+ \sigma_2(\frac{1-\sqrt{5}}{4})^n+\sigma_3(-\frac{1}{2})^n+\frac{\sigma_4}{15}.$$
+
+And for the two consecutive heads problem, we can use the first few values in the sequence $$b_n$$ in particular, $$b_0=0$$, $$b_1=0$$, $$b_2=0.25$$ and $$b_3=0.375$$ to get $$\sigma_1 = -1.1708$$, $$\sigma_2=1.708$$, $$\sigma_3=0$$ and $$\sigma_4=15$$.
 
 
-## 7. A "different" equation
-**Note: This section is under construction**
+But this solution required a lot of guessing, which can feel a little unsatisfactory. How am I supposed to make all the right guesses after all? So, let's explore another method to solve the difference equation which is based on the eigen values of a matrix just like the method in section 6 was. 
 
-There is a way to tame these processes coming from a completely different direction. By 
-constructing a difference equation (see what I did there? Anyone? Anyone?). 
+To get a matrix, we need a system of equations while we have only one (eqn 9). To create a system of equations, let's just add two more dummy equations. 
+
+$$b_{n-1}=b_{n-1}$$
+
+$$b_{n-2}=b_{n-2}$$
+
+Now, we can combine the above two equations with equation (9) and express this system in matrix form.
 
 
-## 8. I'll give you the answer on one condition
+$$\left( \begin{array}{c}
+		b_n \\
+		b_{n-1}\\
+		b_{n-2}\\
+		\end{array} \right) = \left( \begin{array}{ccc}
+		1 & 0 & -\frac{1}{8} & \\
+		1 & 0 & 1\\
+		0 & 1 & 0\\
+		\end{array} \right) \left( \begin{array}{c}
+		b_{n-1} \\
+		b_{n-2}\\
+		b_{n-3}\\
+		\end{array} \right) + \left( \begin{array}{c}
+		\frac{1}{8} \\
+		0\\
+		0\\
+		\end{array} \right)$$
+
+Now let $$\beta_n = \left(\begin{array}{c}
+		b_n \\
+		b_{n-1}\\
+		b_{n-2}\\
+		\end{array} \right)$$, $$\gamma = \left(\begin{array}{c}
+		\frac{1}{8} \\
+		0\\
+		0\\
+		\end{array} \right)$$ and $$M = \left( \begin{array}{ccc}
+		1 & 0 & -\frac{1}{8} & \\
+		1 & 0 & 1\\
+		0 & 1 & 0\\
+		\end{array} \right)$$.
+
+We then get:
+
+
+$$\beta_n = M \beta_{n-1} + \gamma$$
+
+$$=M(M \beta_{n-2}+\gamma) + \gamma$$
+
+$$=M^2 \beta_{n-2} + (I+M)\gamma$$
+
+And repeating this $$(n-2)$$ times we get,
+
+$$\beta_n = M^{n-2}\beta_{n-2} + (I+M+M^2+ \dots + M^{n-3})\gamma$$
+
+Now, assuming $$M$$ is diagonalizable (which it is) we can say:
+
+$$M=E\Lambda E^{-1}$$
+
+And this would imply:
+
+$$M^n = E \Lambda^n E^{-1}$$
+
+So we get:
+
+$$\beta^n = E\Lambda^{n-2}E^{-1}\beta_2 + E(I+\Lambda+\Lambda^2+\dots+\Lambda^{n-3})E^{-1}\gamma$$
+
+Now, if $$\lambda_1$$, $$\lambda_2$$ and $$\lambda_3$$ happen to be the eigen values of $$M$$ then,
+
+$$\Lambda = \left( \begin{array}{ccc}
+		\lambda_1 & 0 & 0 & \\
+		0 & \lambda_2 & 0\\
+		0 & 0 & \lambda_3\\
+		\end{array} \right)$$
+
+and,
+
+$$(I+\Lambda+\Lambda^2 + \dots + \Lambda^{n-3}) = \left( \begin{array}{ccc}
+		\frac{1-\lambda_1^{n-2}}{1-\lambda_1} & 0 & 0 & \\
+		0 & \frac{1-\lambda_2^{n-2}}{1-\lambda_2} & 0\\
+		0 & 0 & \frac{1-\lambda_3^{n-2}}{1-\lambda_3}\\
+		\end{array} \right)$$
+
+Using these, it is easy to see that:
+
+$$\beta_n = c_0 + c_1 \lambda_1^{n-2} + c_2 \lambda_2^{n-2} + c_3 \lambda_3^{n-2}$$
+
+And the eigen values happen to be: $$\lambda_1, \lambda_2, \lambda_3 = \frac{\phi}{2}$$, $$\frac{1-\phi}{2}$$, $$0.5$$.
+
+
+
+## 7.2. I'll give you the answer on one condition
 **Note: This section is under construction**
 
 We started this blog with a simple to understand problem. The solution provided involved Markov chains and thinking in terms of states.
-That solution was like a silver bullet for a whole family of problems of this nature. In this section, we will pursue a simpler solution
-that focuses on just the original problem and involves just conditional probabilities.
+That solution was like a silver bullet for a whole family of problems of this nature. In this section, we will pursue a simpler solution that involves just conditional probabilities.
 
-## 9. One big chain
+Let's define $$A$$ as the event that I win.
+
+Now, instead of thinking about the entire sequences of tosses, let's think of just the very first toss for both sequences.
+
+$$ P(A) = P\left(\begin{array}{c}
+		 &  H & \\
+		 &  H & 
+		\end{array} \right) P\left(A| \begin{array}{c}
+		 &  H & \\
+		 &  H & 
+		\end{array} \right) + P\left(\begin{array}{c}
+		 &  H & \\
+		 &  T & 
+		\end{array} \right) P\left(A| \begin{array}{c}
+		 &  H & \\
+		 &  T
+		\end{array} \right) $$
+
+$$ +P\left(\begin{array}{c}
+		 &  T & \\
+		 &  H & 
+		\end{array} \right) P\left(A| \begin{array}{c}
+		 &  T & \\
+		 &  H & 
+		\end{array} \right) + P\left(\begin{array}{c}
+		 &  T & \\
+		 &  T & 
+		\end{array} \right) P\left(A| \begin{array}{c}
+		 &  T & \\
+		 &  T & 
+		\end{array} \right)$$
+
+
+## 7.3. One big chain
 **Note: This section is under construction**
 
 The original problem stated in this blog (you get three consecutive heads before I get two consecutive heads) was solved using Markov chains.
 
-However, there is more than one Markov chain based solution. 
+Is the fact then that there exists another method to solve this same problem, also relying completely on Markov chains,
+but having very little to do with the one discussed in section 4 a testement to the versetility of Markov chains? 
 
+Let's go over this new method before we decide. 
 
-## 10. Without a computer
+Here, instead of keeping track of the two coin toss sequences independently of each other, we define a single state for the whole game.
+
+And this state is a collection of two numbers, the number of consecutive heads seen so far by you and me.
+
+Before any of us tosses our coin, the state is of course $$(0,0)$$. After the first toss, if I get a heads and you get a tails, 
+the state will be $$(1,0)$$; if both of us get heads, it will be $$(1,1)$$ and so on. 
+
+Also like the markov chains in the method described in section 4, we can't let this one have an unbounded number of states. We need
+to stunt it's state space by defining the ones that lead to a victory for either you or I as absorbing states. So for example, it will
+be impossible to get to state $$(4,1)$$ since I would have won and hence stopped as soon as I got three consecutive heads, hence never reaching four.
+
+This makes $$(3,0)$$ and $$(3,1)$$ absorbing states that result in my victory while $$(0,2)$$, $$(1,2)$$ and $$(2,2)$$ absorbing states resulting in my victory.
+
+$$M = 
+\left( \begin{array}{cccccccccccc}
+		0.25 & 0.25 & 0.25 & 0. &  0.25 & 0.25 & 0.25 & 0. & 0. & 0. & 0. & 1. \\
+		0.25 & 0. & 0. & 0. &  0.25 & 0. &  0. & 0. & 0. & 0. &  0. & 0. \\
+		0. &  0.25 & 0. &  0. &  0. &  0.25 & 0. &  0. &  0. &  0. &  0. &  0. \\
+		0. &  0. &  0.25 &  1. &  0. &  0. &  0.25 &  0. &  0. &  0. &  0. &  0. \\
+		0.25 & 0.25 & 0.25 & 0. &  0. &  0. &  0. &  0. &  0. &  0. &  0. &  0. \\
+		0.25 & 0. &  0. &  0. &  0. &  0. &  0. &  0. &  0. &  0. &  0. &  0. \\
+		0. &  0.25 & 0. &  0. &  0. &  0. &  0. &  0. &  0. &  0. &  0. &  0. \\
+		0. &  0. &  0.25 & 0. &  0. &  0. &  0. &  1. &  0. &  0. &  0. &  0. \\
+		0. &  0. &  0. &  0. &  0.25 & 0.25 & 0.25 & 0. &  1. &  0. &  0. &  0. \\ 
+		0. & 0. & 0. & 0. & 0.25 & 0. & 0. & 0. & 0. & 1. & 0. & 0. \\
+ 		0. & 0. & 0. & 0. & 0. & 0.25 & 0. & 0. & 0. & 0. & 1. & 0.  \\
+        0. & 0. & 0. & 0. & 0. & 0. & 0.25 & 0. & 0. & 0. & 0. & 0. \\
+		\end{array} \right)$$
+
+## 7.4. Without a computer
 **Note: This section is under construction**
 
 Let's say this question was posed to you while you we're on vacation, sitting somewhere on a beach. Ghastly as that prospect is,
@@ -539,7 +767,6 @@ do the next best thing - get upper and lower bounds on the probabilitiy.
 
 Since the premise of this section is that you don't have access to a computer, all the calculations shown in this section can be carried
 out on a pen and paper (or stick and sand).
-
 
 
 
