@@ -196,8 +196,13 @@ And so we get to the most important equation of this blog,
 
 $$\begin{equation}P(A) = \sum_{n=0}^{\infty} (1-P_n[2])(Q_{n-1}[2]) \frac{1}{2} \tag{3} \end{equation}$$
 
-We can get $$P_n$$ and $$Q_n$$ by using equations (1) and (2) and simply multiplying the transition matrices $$n$$ times. Of course, the sum in 
-equation (3) goes to infinite terms and we can't multiply the matrices infinite times. However, note that (as we can see from figure 1), $$(1-P_n[2])$$
+There are other ways to represent the equation above. Here, we considered that the probability of you winning on the $$n$$th toss should be: $$\frac {Q_{n-1}[2]} {2}$$. Taking it another way, we know that the probability that you will reach your goal on or before the $$n$$th toss is $$Q_{n}[3]$$. Also, the probability that you will reach your goal *on* the $$n$$th toss is the probability that you reach it on or before the $$n$$th toss subtracted by the probability that you reach it strictly before the $$n$$th toss, which is just $$Q_{n}[3] - Q_{n-1}[3]$$.
+
+This means that equation (3) above can also be written as:
+
+$$P(A) = \sum_{n=0}^{\infty} (1-P_n[2])(Q_{n}[3]-Q_{n-1}[3])$$
+
+We can get $$P_n$$ and $$Q_n$$ by using equations (1) and (2) and simply multiplying the transition matrices $$n$$ times. Of course, the sum in equation (3) goes to infinite terms and we can't multiply the matrices infinite times. However, note that (as we can see from figure 1), $$(1-P_n[2])$$
 will tend to zero as $$n$$ becomes large (as the absorbing state - which is 2 - sucks up all the probability mass as $$n$$ increases 
 and this means one minus it's probability tends to zero) 
 and $$Q_{n-1}[2]$$ will tend
@@ -384,9 +389,21 @@ plt.plot(ns, win_probs)
 Looking at the figure, something surprising pops out.
 
 As we increase the number of tosses I need, the probability of you winning starts approaching 33.33% or one third.
-Similarly, the probability of me winning starts approaching 66.67% or two thirds. It's a little surprising that such a simple number pops out.
+Similarly, the probability of me winning starts approaching 66.67% or two thirds. It's a little surprising that such simple numbers pop out.
 
-There is a tantalizing possibility that there exists some elegant reason for this, but I haven't been able to devise the thought experiment. 
+And where there are simple numbers, there are elegant reasons. 
+
+Note that this game is like I have a coin that flips successfuly once in $$2^n$$ (to get $$n$$ heads in a row) and you have a coin that flips successfuly once in $$2^{n+1}$$ and we ask who succeeds first. 
+
+What complicates matters is that I win ties. If $$n$$ is large however, there will be very few ties.
+
+Also if $$n$$ is large, the chance of a run of $$n$$ heads is very small, $$2^{-n}$$. We can view each flip as a try by you to start a run of $$n+1$$ heads, which happens with probability $$2^{-(n+1)}$$ and a try by me to start a run of $$n$$ heads, which happens with probability $$2^{-n}$$.
+
+Almost all attempts will fail for both of us. We can ignore those. 
+
+The chance that you win is then $$\frac {2^{-(n+1)}}{2^{-n}+2^{-(n+1)}}= \frac{\frac 12}{1+ \frac12} = \frac 13$$. 
+
+The reason it starts lower when $$n$$ is smaller is that we might both start succesful runs at the same time, at which point you win because your run finishes first. However for large values of $$n$$, it becomes near impossible to succeed at the same time.
 
 
 ## 6. Closed forming the markov sequences
@@ -546,7 +563,7 @@ Simplifying further:
 
 \begin{equation} b_n =  b_{n-1} - \frac{1}{8} b_{n-3} + \frac{1}{8} \tag{9}\end{equation}
 
-Now, we know $$b_n$$ for the first few values of $$n$$. When $$n=0$$, there is no way I would be in my absorbing state of two consecutive tosses. Hence, $$b_0 = 0$$. Even on the first toss, there is no chance I would have tosses two heads surely. So, $$b_1=0$$ as well. When $$n=2$$, there is a chance I would see two consecutive heads. For that, the first two tosses would have be both be heads. The probability of that is $$\frac{1}{2}\times\frac{1}{2} = 0.25$$.
+Now, we know $$b_n$$ for the first few values of $$n$$. When $$n=0$$, there is no way I would be in my absorbing state of two consecutive tosses. Hence, $$b_0 = 0$$. Even on the first toss, there is no chance I would have tosses two heads surely. So, $$b_1=0$$ as well. When $$n=2$$, there is a chance I would see two consecutive heads. For that, the first two tosses would have to both have been heads. The probability of this event is $$\frac{1}{2}\times\frac{1}{2} = 0.25$$.
 
 Now, we can use these and equation (9) to calculate the other terms of the sequence. 
 
@@ -555,6 +572,8 @@ $$b_3 = b_2 - \frac{b_0}{8} + \frac{1}{8} = 0.25 + 0.125 = 0.375$$
 $$b_4 = b_3 - \frac{b_1}{8} + \frac{1}{8} = 0.375 + 0.125 = 0.5$$
 
 $$b_5 = b_4 - \frac{b_2}{8} + \frac{1}{8} = 0.5+\frac{0.75}{8} = 0.59375$$
+
+$$\vdots$$
 
 You get the idea by now, we can extend this as far as we like to get any $$b_n$$. This is an alternate way to get the sequence 
 we calculated in section 3 ($$P_n[2]$$) and used in section 4 to get the answer. 
@@ -565,27 +584,89 @@ But, we still need to patiently iterate all the way to $$n$$ starting from $$n=3
 
 The standard way to solve a difference equation like (9) is to separate into homogeneous and non-homogeneous parts, solve the homogeneous part using a polynomial guess and then make another guess for how the solution will need to be modified to make it compatible with the original, non-homogeneous equation.
 
-The homogeneous part of $$b_{n}−b_{n−1}=\frac{1}{8}(1−b_{n−3})$$ is given by:
-$$8b_{n}-8b_{n-1}+b_{n-3}=0$$
- 
-So the characteristic equation is given by:
+First, let's clean up equation (9) a bit:
+
+\begin{equation}8b_{n}-8b_{n-1}+b_{n-3}=1\tag{10}\end{equation}
+
+The homogeneous part of this equation is given by:
+
+\begin{equation}8b_{n}-8b_{n-1}+b_{n-3}=0\tag{11}\end{equation}
+
+Here, we make an educated guess ("[ansatz][ansatz]" in German - we will make two of these guesses in this section which can make some people feel uneasy. If that is so, skip to the next sub-section (7.1.2) where we solve the same equation in a more algorithmic manner). 
+
+We suspect the solution to this homogeneous equation might be:
+
+$$b_n' = l^n$$
+
+Substituting this into equation (11), we get the characteristic polynomial:
 
 $$8l^3-8l^2+1=0$$
 
-The roots are given by $$l=\frac{1-\sqrt{5}}{4}, \frac{1+\sqrt{5}}{4},-\frac{1}{2}$$
+The roots of which are given by $$l=\frac{1-\sqrt{5}}{4}, \frac{1+\sqrt{5}}{4}, \frac{1}{2}$$
 
-And the answer can be taken as a constant: $$b_n=c$$. Substituting in 
-$$8b_n+8b_{n-1}-b_{n-3}=1$$
-We have $$c=\frac{1}{15}$$
+Notice that the [golden ratio][golden_ratio], $$\phi$$ is given by $$\phi = \frac{1+\sqrt 5}{2}$$ which means we can express the roots of the characteristic polynomial of the homogeneous equation as:
 
-Therefore the general solution can be written as:
+$$l = \frac{\phi}{2}, \frac{1-\phi}{2}, \frac 1 2$$
 
-$$b_n=\sigma_1\left(\frac{\sqrt{5}+1}{4}\right)^n+ \sigma_2(\frac{1-\sqrt{5}}{4})^n+\sigma_3(-\frac{1}{2})^n+\frac{\sigma_4}{15}.$$
+Remeber we started off with the assumption that $$b_n'=l^n$$. This means that the following will all work for $$b_n'$$:
 
-And for the two consecutive heads problem, we can use the first few values in the sequence $$b_n$$ in particular, $$b_0=0$$, $$b_1=0$$, $$b_2=0.25$$ and $$b_3=0.375$$ to get $$\sigma_1 = -1.1708$$, $$\sigma_2=1.708$$, $$\sigma_3=0$$ and $$\sigma_4=15$$.
+$$b_n' = \left(\frac{\phi}{2}\right)^n$$
 
+$$b_n' = \left(\frac{1-\phi}{2}\right)^n$$
 
-But this solution required a lot of guessing, which can feel a little unsatisfactory. How am I supposed to make all the right guesses after all? So, let's explore another method to solve the difference equation which is based on the eigen values of a matrix just like the method in section 6 was. 
+$$b_n' = \left(\frac{1}{2}\right)^n$$
+
+Meaning that any linear combination of these three solutions will also be a solution of equation (11). So in general,
+
+\begin{equation}b_n' = c_1 \left(\frac{\phi}{2}\right)^n + c_2 \left(\frac{1-\phi}{2}\right)^n + c_3 \left(\frac {1} {2}\right)^n\tag{12}\end{equation}
+
+Now, how do we modify this solution of equation (11) above to get the solution of the original, non-homogeneous equation (equation (10))?
+
+We know that $$b_n'$$ satisfies equation (10) so we can write:
+
+$$8b_n'-8b_{n-1}'+b_{n-3}' = 0$$
+
+Let's assume $$b_n' = b_n+c_0$$
+
+So the equation above becomes:
+
+$$8(b_n+c_0)-8(b_n+c_0)+(b_{n-3}+c_0) = 0$$
+
+$$=>8b_n-8b_n+b_{n-3} = -c_0$$
+
+To make this align with equation (10) we require $$c_0=-1$$
+
+And this would mean $$b_n = b_n'-c_0 = b_n'+1$$
+
+So, the general solution ($$b_n$$) of equation (10) can be written using this result and (12):
+
+\begin{equation}b_n= c_1 \left(\frac{\phi}{2}\right)^n + c_2 \left(\frac{1-\phi}{2}\right)^n + c_3 \left(\frac {1} {2}\right)^n + 1\tag{13}\end{equation}
+
+And for the two consecutive heads problem, we can use the first few values in the sequence $$b_n$$ in particular, $$b_0=0$$, $$b_1=0$$, $$b_2=0.25$$ and $$b_3=0.375$$ to get the $$c_i$$'s. This is accomplished with the following python code:
+
+```python
+import numpy as np
+phi = 1.618033988749895
+## The three roots
+l1 = phi/2; l2 = (1-phi)/2; l3 = .5
+
+mat = np.array([
+            [1, 1,   1,    1],
+            [1,l1,   l2,   l3],
+            [1,l1**2,l2**2,l3**2],
+            [1,l1**3,l2**3,l3**3]])
+
+## The first four b_n's
+bn = np.array([0,0,.25,.375])
+cc = np.linalg.solve(mat,bn)
+# cc is the vector of coefficients [c_0,c_1,c_2,c_3] = [1., -1.17082039, .170820393, 0]
+```
+
+### 7.1.2. Closed form for difference equation using matrix approach
+
+If you were happy with the solution presented in 7.1.1, you can skip this one. 
+
+But some people feel like that qpproach requires a lot of guessing. How am I supposed to make all the right guesses after all? So, let's explore another method to solve the difference equation which is based on the eigen values of a matrix just like the method in section 6 was. 
 
 To get a matrix, we need a system of equations while we have only one (eqn 9). To create a system of equations, let's just add two more dummy equations. 
 
@@ -602,7 +683,7 @@ $$\left( \begin{array}{c}
 		b_{n-2}\\
 		\end{array} \right) = \left( \begin{array}{ccc}
 		1 & 0 & -\frac{1}{8} & \\
-		1 & 0 & 1\\
+		1 & 0 & 0\\
 		0 & 1 & 0\\
 		\end{array} \right) \left( \begin{array}{c}
 		b_{n-1} \\
@@ -637,9 +718,13 @@ $$=M(M \beta_{n-2}+\gamma) + \gamma$$
 
 $$=M^2 \beta_{n-2} + (I+M)\gamma$$
 
+$$=M^3 \beta_{n-3} + (I+M+M^2)\gamma$$
+
+$$\vdots$$
+
 And repeating this $$(n-2)$$ times we get,
 
-$$\beta_n = M^{n-2}\beta_{n-2} + (I+M+M^2+ \dots + M^{n-3})\gamma$$
+$$\beta_n = M^{n-2}\beta_{2} + (I+M+M^2+ \dots + M^{n-3})\gamma$$
 
 Now, assuming $$M$$ is diagonalizable (which it is) we can say:
 
@@ -651,30 +736,91 @@ $$M^n = E \Lambda^n E^{-1}$$
 
 So we get:
 
-$$\beta^n = E\Lambda^{n-2}E^{-1}\beta_2 + E(I+\Lambda+\Lambda^2+\dots+\Lambda^{n-3})E^{-1}\gamma$$
+\begin{equation}\beta_n = E\Lambda^{n-2}E^{-1}\beta_2 + E(I+\Lambda+\Lambda^2+\dots+\Lambda^{n-3})E^{-1}\gamma \tag{14}\end{equation}
 
 Now, if $$\lambda_1$$, $$\lambda_2$$ and $$\lambda_3$$ happen to be the eigen values of $$M$$ then,
 
 $$\Lambda = \left( \begin{array}{ccc}
-		\lambda_1 & 0 & 0 & \\
-		0 & \lambda_2 & 0\\
-		0 & 0 & \lambda_3\\
+		\lambda_1 & 0 & 0 \\
+		0 & \lambda_2 & 0 \\
+		0 & 0 & \lambda_3 \\
 		\end{array} \right)$$
 
 and,
 
-$$(I+\Lambda+\Lambda^2 + \dots + \Lambda^{n-3}) = \left( \begin{array}{ccc}
-		\frac{1-\lambda_1^{n-2}}{1-\lambda_1} & 0 & 0 & \\
-		0 & \frac{1-\lambda_2^{n-2}}{1-\lambda_2} & 0\\
-		0 & 0 & \frac{1-\lambda_3^{n-2}}{1-\lambda_3}\\
+$$\Lambda \Lambda = \Lambda^2 = \left( \begin{array}{ccc}
+		\lambda_1^2 & 0 & 0 \\
+		0 & \lambda_2^2 & 0 \\
+		0 & 0 & \lambda_3^2 \\
 		\end{array} \right)$$
 
-Using these, it is easy to see that:
+meaning the $$\Lambda$$ stays diagonal no matter how many times we multiply it with itself. 
 
-$$\beta_n = c_0 + c_1 \lambda_1^{n-2} + c_2 \lambda_2^{n-2} + c_3 \lambda_3^{n-2}$$
+Remember, we are interested in the first element of $$\beta_n$$ which is $$b_n$$ and can be extracted by taking a dot product with a vector that has a 1 in the first position and zero at other positions.
 
-And the eigen values happen to be: $$\lambda_1, \lambda_2, \lambda_3 = \frac{\phi}{2}$$, $$\frac{1-\phi}{2}$$, $$0.5$$.
+$$b_n = \beta_n^T \left(\begin{array}{c}1 \\ 0 \\ 0\\\end{array} \right)$$
 
+Now, using the same arguments as in section 6, we can say that any component of the first term in the R.H.S of equation (14) can be written as:
+
+$$ (E \Lambda^{n-2} E^{-1} \beta_2)^T \left(\begin{array}{c}1 \\ 0 \\ 0\\\end{array} \right) = l_1 \lambda_1^{n-2}+l_2 \lambda_2^{n-2} + l_3 \lambda_3^{n-2} \tag{15}$$
+
+Now to tackle the second term of equation (14). Observe that:
+
+$$(I+\Lambda+\Lambda^2 + \dots + \Lambda^{n-3}) = 
+		\left( \begin{array}{ccc}
+			1+\lambda_1+\dots+\lambda_1^{n-3} & 0 & 0 \\
+			0 & 1+\lambda_2+\dots+\lambda_2^{n-3} & 0 \\
+			0 & 0 & 1+\lambda_3+\dots+\lambda_3^{n-3} \\
+		\end{array} \right)
+		 $$
+
+$$ = \left( \begin{array}{ccc}
+			\frac{1-\lambda_1^{n-2}}{1-\lambda_1} & 0 & 0 \\
+			0 & \frac{1-\lambda_2^{n-2}}{1-\lambda_2} & 0 \\
+			0 & 0 & \frac{1-\lambda_3^{n-2}}{1-\lambda_3} \\
+		\end{array} \right)$$
+
+Here, we used the geometric series result:
+
+$$1+\lambda + \lambda^2 + \dots + \lambda^{n-1} = \frac{1-\lambda^n}{1-\lambda}$$
+
+Again, we see a similar pattern to the one utilized in equation (15) and so we can say:
+
+$$(E(I+\Lambda+\Lambda^2+\dots+\Lambda^{n-3})E^{-1}\gamma)^T \left(\begin{array}{c}1 \\ 0 \\ 0\\\end{array} \right) = 
+\left(\begin{array}{ccc}1&0&0\end{array}\right)
+E \left( \begin{array}{ccc}
+			\frac{1-\lambda_1^{n-2}}{1-\lambda_1} & 0 & 0 \\
+			0 & \frac{1-\lambda_2^{n-2}}{1-\lambda_2} & 0 \\
+			0 & 0 & \frac{1-\lambda_3^{n-2}}{1-\lambda_3} \\
+		\end{array} \right)E^{-1}\gamma$$
+
+$$ = m_1 \frac{1-\lambda_1^{n-2}}{1-\lambda_1} + m_2 \frac{1-\lambda_2^{n-2}}{1-\lambda_2} + m_3 \frac{1-\lambda_3^{n-2}}{1-\lambda_3}$$
+
+meaning,
+
+$$(E(I+\Lambda+\Lambda^2+\dots+\Lambda^{n-3})E^{-1}\gamma)^T \left(\begin{array}{c}1 \\ 0 \\ 0\\\end{array} \right)$$ 
+
+$$= 
+\left(\frac{m_1}{1-\lambda_1} + \frac{m_2}{1-\lambda_2} + \frac{m_3}{1-\lambda_3}\right)
+- \left(\frac{m_1}{1-\lambda_1} \lambda_1^{n-2} + \frac{m_2}{1-\lambda_2} \lambda_2^{n-2} + \frac{m_3}{1-\lambda_3} \lambda_3^{n-2}\right)$$
+
+$$ = d_0 + d_1 \lambda_1^{n-2} + d_2 \lambda_2^{n-2} + d_3 \lambda_3^{n-2} \tag{16}$$
+
+Adding equations (15) and (16), we get the first term in the L.H.S of equation (14), which is $$b_n$$.
+
+$$b_n = \beta_n^T\left(\begin{array}{c}1\\0\\0\end{array}\right)$$
+
+$$ = (E\Lambda^{n-2}E^{-1}\beta_2 + E(I+\Lambda+\Lambda^2+\dots+\Lambda^{n-3})E^{-1}\gamma)^T \left(\begin{array}{c}1\\0\\0\end{array}\right)$$
+
+$$ = d_0 + (d_1+l_1)\lambda_1^{n-2} + (d_2+l_2) \lambda_2^{n-2} + (d_3+l_3) \lambda_3^{n-2}$$
+
+Now redefine: $$c_0 = d_0$$, $$\frac{d_1+l_1}{\lambda_1^2} = c_1$$ and so on we get:
+
+$$b_n = c_0 + c_1 \lambda_1^n + c_2 \lambda_2^n + c_3 \lambda_3^n$$
+
+Now, the eigen values of $$M$$ are: $$\lambda_1, \lambda_2, \lambda_3 = \frac{\phi}{2}$$, $$\frac{1-\phi}{2}$$, $$\frac 1 2$$, which are the same as the roots of the polynomial equation in the previous sub-section.
+
+Substituting this into the previous equation we get equation (13) through this alternate linear algebra based route.
 
 
 ## 7.2. I'll give you the answer on one condition
@@ -722,7 +868,7 @@ $$ +P\left(\begin{array}{c}
 The original problem stated in this blog (you get three consecutive heads before I get two consecutive heads) was solved using Markov chains.
 
 Is the fact then that there exists another method to solve this same problem, also relying completely on Markov chains,
-but having very little to do with the one discussed in section 4 a testement to the versetility of Markov chains? 
+but having very little to do with the one discussed in section 4 a testement to the versetility and power of Markov chains? 
 
 Let's go over this new method before we decide. 
 
@@ -773,3 +919,5 @@ out on a pen and paper (or stick and sand).
 [eigvalstoch]: https://yutsumura.com/eigenvalues-of-a-stochastic-matrix-is-always-less-than-or-equal-to-1/
 [3Hbefore2H]:https://gist.github.com/ryu577/89e4ef0b0b7fcba33e08a549f0793c86
 [gist_3hb42hwithp]:https://gist.github.com/ryu577/9464d39e1b40ffdd37773d44ffb81eab
+[golden_ratio]:https://en.wikipedia.org/wiki/Golden_ratio
+[ansatz]:https://en.wikipedia.org/wiki/Ansatz
