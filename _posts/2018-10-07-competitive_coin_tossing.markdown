@@ -824,7 +824,6 @@ Substituting this into the previous equation we get equation (13) through this a
 
 
 ## 7.2. I'll give you the answer on one condition
-**Note: This section is under construction**
 
 We started this blog with a simple to understand problem. The solution provided involved Markov chains and thinking in terms of states.
 That solution was like a silver bullet for a whole family of problems of this nature. In this section, we will pursue a simpler solution that involves just conditional probabilities.
@@ -985,7 +984,6 @@ $$+ \frac 1 4 \frac 1 2 \left(\frac 1 2 + \frac 1 2 P(A)\right) + \frac 1 4 P\le
 Now, equations (17), (18), (19) and (20) are four equations in four unknowns and they can be solved to get $$P(A)$$, which happens to be one of those unknowns.
 
 ## 7.3. One big chain
-**Note: This section is under construction**
 
 The original problem stated in this blog (you get three consecutive heads before I get two consecutive heads) was solved using Markov chains.
 
@@ -996,17 +994,78 @@ Let's go over this new method before we decide.
 
 Here, instead of keeping track of the two coin toss sequences independently of each other, we define a single state for the whole game.
 
-And this state is a collection of two numbers, the number of consecutive heads seen so far by you and me.
+And this state is a collection of two numbers, the number of consecutive heads seen so far by you and me (first number, second number).
 
 Before any of us tosses our coin, the state is of course $$(0,0)$$. After the first toss, if I get a heads and you get a tails, 
 the state will be $$(1,0)$$; if both of us get heads, it will be $$(1,1)$$ and so on. 
 
 Also like the markov chains in the method described in section 4, we can't let this one have an unbounded number of states. We need
 to stunt it's state space by defining the ones that lead to a victory for either you or I as absorbing states. So for example, it will
-be impossible to get to state $$(4,1)$$ since I would have won and hence stopped as soon as I got three consecutive heads, hence never reaching four.
+be impossible to get to state $$(4,1)$$ since you would have won and hence stopped as soon as you got three consecutive heads, hence never reaching four.
 
-This makes $$(3,0)$$ and $$(3,1)$$ absorbing states that result in my victory while $$(0,2)$$, $$(1,2)$$ and $$(2,2)$$ absorbing states resulting in my victory.
+This makes $$(3,0)$$ and $$(3,1)$$ absorbing states that result in your victory while $$(0,2)$$, $$(1,2)$$, $$(2,2)$$ and even $$(3,2)$$ absorbing states resulting in my victory (you need to get 3 consecutive heads *before* I get two consecutive heads).
 
+So, the possible states are (might as well express them in python code):
+
+```python
+index2state=[(0,0),(1,0),(2,0),(0,1),(1,1),(2,1),(0,2),(1,2),(2,2),(3,0),(3,1),(3,2)]
+```
+
+Note that for the first six states, none of us has won. These are called transient states since they go to other states.
+
+In the last six states, one of us has won and once the game reaches them, it stays in those states forever (since it concluded as soon as it reached them). Those states are called recurrent states.
+
+Of the six recurrent states ((0,2),(1,2),(2,2),(3,0),(3,1) and (3,2)); (3,0) and (3,1) are the only ones where you win.
+
+Now, the rules of the game obviously dictate some transition matrix between the states mentioned above.
+
+* Any time the game is in state (i,j), if (i,j) is a transient state:
+	* It will transition to (0,0) if both of us get heads (probability $$\frac 1 4$$).
+	* It will transition to (i+1,0) if you get a heads but I get a tails (probability $$\frac 1 4$$).
+	* It will transition to (j+1,0) if you get a tails and I get a heads (probability $$\frac 1 4$$).
+	* It will transition to (i+1,j+1) if both of us get heads (probability $$\frac 1 4$$).
+* Any time the game is in an absorbing state, it stays in the absorbing state with probability 1.
+
+The matrix these rules correspond to is shown in the figure below. The transient states are represented in black, the absorbing states where you lose are represented in red and the ones where you win in green.
+
+The larger matrix is divided into four sections. The top-left section is the sub-matrix for transitions between transient states. We call it $$Q$$. The top-right is the sub-matrix for transitions from transient to recurring states. We call it $$R$$. The bottom right is from recurring to recurring. Since recurring states stay in the same state and don't transition anywhere else, this is simply an identity matrix. 
+
+![Probability sequences]({{site.url}}/Downloads/CompetitiveCoinToss/BigMatrix.png)
+
+Now, if we can find the probabilities that the game ends in each of the recurring states, we can use those to find the probability you'll win since the recurring states corresponding to your victory are (3,0) and (3,1).
+
+Given that we start in transient state $$i$$, the probabilities that the game ends up in each of the absorbing states is given by the $$i$$th row of the matrix given by:
+
+$$U = (I-Q)^{-1}R \tag{21}$$
+
+To see the reason, conditionin the absorption process from state $$i$$ to state $$j$$ based on what happens in the first transition: either the absorption happens in the first transition with probability $$R_{ij}$$, or a transition occurs into some other transient state $$k$$ with probability $$Q_{ik}$$ and from there transitions until eventually absorbed with probability $$u_{kj}$$. This can be expressed as the matrix equation
+
+$$u = Qu + R$$
+
+where solving for $$u$$ generates the original equation above. 
+
+
+Here is some python code that generates the transition matrix $$M$$ shown in the figure above, splits it into $$Q$$ and $$R$$ and then uses them to obtain $$U$$ as per equation (21).
+
+```python
+import numpy as np
+m = np.zeros((12,12))
+state2index = {(0,0):0,(1,0):1,(2,0):2,(0,1):3,(1,1):4,(2,1):5,(0,2):6,(1,2):7,(2,2):8,(3,0):9,(3,1):10,(3,2):11}
+index2state = [(0,0),(1,0),(2,0),(0,1),(1,1),(2,1),(0,2),(1,2),(2,2),(3,0),(3,1),(3,2)]
+for i in range(6):
+    m[i,0] = 0.25
+    m[i, state2index[(index2state[i][0]+1,0)]] = 0.25
+    m[i, state2index[(0,index2state[i][1]+1)]] = 0.25
+    m[i, state2index[(index2state[i][0]+1,index2state[i][1]+1)]] = 0.25
+m[6:,6:] = np.eye(6)
+
+q = m[:6,:6]
+r = m[:6,6:]
+u = np.linalg.solve(np.eye(6)-q, r)
+print("Probability you win:" + str(u[0,3]+u[0,4]))
+```
+
+<!---
 $$
 M =
 \left( \begin{array}{cccccccccccc}
@@ -1024,7 +1083,6 @@ M =
         0. & 0. & 0. & 0. & 0. & 0. & 0.25 & 0. & 0. & 0. & 0. & 0. \\
 		\end{array} \right)
 $$
-
 
 $$
 \left( \begin{array}{ccc}
@@ -1046,8 +1104,7 @@ do the next best thing - get upper and lower bounds on the probabilitiy.
 
 Since the premise of this section is that you don't have access to a computer, all the calculations shown in this section can be carried
 out on a pen and paper (or stick and sand).
-
-
+-->
 
 [eigvalstoch]: https://yutsumura.com/eigenvalues-of-a-stochastic-matrix-is-always-less-than-or-equal-to-1/
 [3Hbefore2H]:https://gist.github.com/ryu577/89e4ef0b0b7fcba33e08a549f0793c86
