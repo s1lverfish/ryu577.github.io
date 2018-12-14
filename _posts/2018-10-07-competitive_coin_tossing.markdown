@@ -592,7 +592,7 @@ The homogeneous part of this equation is given by:
 
 \begin{equation}8b_{n}-8b_{n-1}+b_{n-3}=0\tag{11}\end{equation}
 
-Here, we make an educated guess ("[ansatz][ansatz]" in German - we will make two of these guesses in this section which can make some people feel uneasy. If that is so, skip to the next sub-section (7.1.2) where we solve the same equation in a more algorithmic manner). 
+Here, we make an educated guess ("[ansatz][ansatz]" in German - we will make two of these guesses in this section which can make some people feel uneasy. If that is so, skip to the next sub-section (7.1.2) where we solve the same equation in a 'more systematic' manner). 
 
 We suspect the solution to this homogeneous equation might be:
 
@@ -829,38 +829,160 @@ Substituting this into the previous equation we get equation (13) through this a
 We started this blog with a simple to understand problem. The solution provided involved Markov chains and thinking in terms of states.
 That solution was like a silver bullet for a whole family of problems of this nature. In this section, we will pursue a simpler solution that involves just conditional probabilities.
 
-Let's define $$A$$ as the event that I win.
+Let's define $$A$$ as the event that you win.
 
-Now, instead of thinking about the entire sequences of tosses, let's think of just the very first toss for both sequences.
+Now, instead of thinking about the entire sequences of tosses, let's think of just the very first toss for both sequences (the top one is yours and the bottom one is mine). Conditioning on these first two tosses we get,
 
 $$ P(A) = P\left(\begin{array}{c}
-		 &  H & \\
-		 &  H & 
+		 H \\
+		 H 
 		\end{array} \right) P\left(A| \begin{array}{c}
-		 &  H & \\
-		 &  H & 
+		 H \\
+		 H 
 		\end{array} \right) + P\left(\begin{array}{c}
-		 &  H & \\
-		 &  T & 
+		 H \\
+		 T 
 		\end{array} \right) P\left(A| \begin{array}{c}
-		 &  H & \\
-		 &  T
+		 H \\
+		 T
 		\end{array} \right) $$
 
 $$ +P\left(\begin{array}{c}
-		 &  T & \\
-		 &  H & 
+		 T \\
+		 H  
 		\end{array} \right) P\left(A| \begin{array}{c}
-		 &  T & \\
-		 &  H & 
+		 T  \\
+		 H  
 		\end{array} \right) + P\left(\begin{array}{c}
-		 &  T & \\
-		 &  T & 
+		 T \\
+		 T 
 		\end{array} \right) P\left(A| \begin{array}{c}
-		 &  T & \\
-		 &  T & 
+		 T \\
+		 T 
 		\end{array} \right)$$
 
+Now, since all tosses are independent,
+
+$$P\left(\begin{array}{c}
+		 T \\
+		 H 
+		\end{array} \right) = P\left(\begin{array}{c}
+		 H \\
+		 T 
+		\end{array} \right) = P\left(\begin{array}{c}
+		 H \\
+		 H 
+		\end{array} \right) = P\left(\begin{array}{c}
+		 T \\
+		 T 
+		\end{array} \right) = \frac 1 4$$
+
+Which means that:
+
+$$ P(A) = \frac 1 4 P\left(A| \begin{array}{c}
+		 H  \\
+		 H  
+		\end{array} \right) + \frac 1 4 P\left(A| \begin{array}{c}
+		 H \\
+		 T
+		\end{array} \right) $$
+
+$$ +\frac 1 4 P\left(A| \begin{array}{c}
+		 T \\
+		 H 
+		\end{array} \right) + \frac 1 4 P\left(A| \begin{array}{c}
+		 T \\
+		 T 
+		\end{array} \right)$$
+
+Now, if both of us get tails on our first tosses, that's essentially the same as restarting the game. We might as well throw those tosses out and start from scratch since none of us is any closer to their goal. 
+
+Therefore its easy to see that:
+
+$$P\left(A| \begin{array}{c}
+		 T \\
+		 T  
+		\end{array} \right)  = P(A)$$
+
+
+Substituting into the previous equation we get:
+
+$$ P(A) = \frac 1 3 \left(P\left(A| \begin{array}{c}
+		 H \\
+		 H 
+		\end{array} \right) +  P\left(A| \begin{array}{c}
+		 H \\
+		 T
+		\end{array} \right) +  P\left(A| \begin{array}{c}
+		 T \\
+		 H 
+		\end{array} \right) \right) \tag{17}$$
+
+Now let's tackle the next term in order of difficulty, $$P\left(A| \begin{array}{c}
+		 T \\
+		 H 
+		\end{array} \right)$$. Let's consider the various possibilities.
+
+* If I get a tails on the next toss, the game is over and I've won. So, I *have* to get a tails on my second toss for you to win (or event $$A$$ to occur). The probability of this is $$\frac 1 2$$. The question becomes, what did you get on your second toss.
+	* Now if you get a tails on the second toss (an event with probability $$\frac 1 2$$), the game would have been reset and the probability of you winning from there is $$P(A)$$.
+	* If you get a heads on your next toss, then we can throw away the first tosses. The probability you will win from here becomes $$P\left(A| \begin{array}{c}
+		 H \\
+		 T 
+		\end{array} \right)$$
+
+Putting all this together we get -
+
+$$P\left(A| \begin{array}{c}
+		 T \\
+		 H 
+		\end{array} \right) = \frac 1 2 \left[ \frac{1}{2} P(A) + \frac 1 2 P\left(A| \begin{array}{c}
+		 H \\
+		 T 
+		\end{array} \right)  \right] \tag{18}$$
+
+Next, let's tackle $$P\left(A| \begin{array}{c}
+		 H \\
+		 H 
+		\end{array} \right)$$.
+
+* If I get a heads on the second toss, the game is over since my first toss was already a heads. So, we don't have to consider any possibility where that happens. So, our next two tosses can either be a heads for you and tails for me or tails for both of us.
+	* If the our second tosses result in a heads for you and tails for me, the probability of this is $$\frac 1 4$$. 
+		* If you then score a heads on the third toss as well (probability $$\frac 1 2$$), you win and it doesn't matter what I got.
+		* If you score a tails (probability $$\frac 1 2$$), things get more interesting.
+			* If I score a heads (probability $$\frac 1 2$$), it's effectively the same as me being on one heads and you being a one tails, which is $$P\left(A| \begin{array}{c}
+		 		T \\
+	 			H 
+				\end{array} \right)$$.
+			* If I score a tails (probability $$\frac 1 2$$), then we both scored tails on our third tosses and any time that happens the game resets and the probability of you winning again becomes $$P(A)$$.
+	* If I get a tails on the second toss (probability $$\frac 1 2$$), it means we now both have tails and the game has reset. So the probability from here is $$P(A)$$.
+
+Putting all this together we have:
+
+$$P\left(A| \begin{array}{c}
+		 H \\
+		 H 
+		\end{array} \right) = \frac 1 4 \left( \frac 1 2 + \frac 1 2 \left( \frac 1 2 P\left(A| \begin{array}{c}
+		 T \\
+		 H 
+		\end{array} \right) + \frac 1 2 P(A)\right)\right) + \frac 1 4 P(A)\tag{19}$$
+
+And using similar reasoning we can get:
+
+$$P\left(A| \begin{array}{c}
+		 H \\
+		 T 
+		\end{array} \right) = \frac 1 4 \left( \frac 1 2 + \frac 1 2 \left(\frac 1 2 P(A) + \frac 1 2 P\left(A| \begin{array}{c}
+		 T \\
+		 H 
+		\end{array} \right)\right) \right)$$ 
+
+$$+ \frac 1 4 \frac 1 2 \left(\frac 1 2 + \frac 1 2 P(A)\right) + \frac 1 4 P\left(A| \begin{array}{c}
+		 T \\
+		 H 
+		\end{array} \right) + \frac 1 4 P(A)\tag{20}$$
+
+
+Now, equations (17), (18), (19) and (20) are four equations in four unknowns and they can be solved to get $$P(A)$$, which happens to be one of those unknowns.
 
 ## 7.3. One big chain
 **Note: This section is under construction**
@@ -885,7 +1007,8 @@ be impossible to get to state $$(4,1)$$ since I would have won and hence stopped
 
 This makes $$(3,0)$$ and $$(3,1)$$ absorbing states that result in my victory while $$(0,2)$$, $$(1,2)$$ and $$(2,2)$$ absorbing states resulting in my victory.
 
-$$M = 
+$$
+M =
 \left( \begin{array}{cccccccccccc}
 		0.25 & 0.25 & 0.25 & 0. &  0.25 & 0.25 & 0.25 & 0. & 0. & 0. & 0. & 1. \\
 		0.25 & 0. & 0. & 0. &  0.25 & 0. &  0. & 0. & 0. & 0. &  0. & 0. \\
@@ -899,7 +1022,17 @@ $$M =
 		0. & 0. & 0. & 0. & 0.25 & 0. & 0. & 0. & 0. & 1. & 0. & 0. \\
  		0. & 0. & 0. & 0. & 0. & 0.25 & 0. & 0. & 0. & 0. & 1. & 0.  \\
         0. & 0. & 0. & 0. & 0. & 0. & 0.25 & 0. & 0. & 0. & 0. & 0. \\
-		\end{array} \right)$$
+		\end{array} \right)
+$$
+
+
+$$
+\left( \begin{array}{ccc}
+	\underline{-}| & \underline{a} & \underline{b}  \\
+	a| & 0 & 1 \\
+	b| & 0 & 1 \\
+\end{array} \right)
+$$
 
 ## 7.4. Without a computer
 **Note: This section is under construction**
