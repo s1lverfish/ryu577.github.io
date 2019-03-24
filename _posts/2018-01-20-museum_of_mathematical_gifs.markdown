@@ -1,27 +1,27 @@
-
 ---
 layout: post
 comments: true
 title:  "Museum of dancing math"
-date:   2017-09-28 16:34:40 -0800
+date:   2019-03-24 16:34:40 -0800
 categories: jekyll update
 ---
 
 
 To create a bouncy sphere or a wavy sphere, run 
+
 ```python
 from pyray.shapes.sphere import *
 draw_wavy_sphere_wrapper('.\\im', 66, 1)
 ```
 
-<img src="https://github.com/ryu577/pyray/blob/master/Images/WavySphere.gif" 
-alt="Image formed by above method" width="240" height="240" border="10" /></a>
+<img src="https://s2.gifyu.com/images/WavySphere.gif" 
+alt="Image formed by above method" width="240" height="240" border="10" />
 
-```python
-draw_oscillating_sphere('..\\images\\im', 20, 2)
-```
-<img src="https://github.com/ryu577/pyray/blob/master/Images/BouncySphere.gif" 
-alt="Image formed by above method" width="240" height="240" border="10" /></a>
+
+<img src="https://s2.gifyu.com/images/AndreReflcn.gif" 
+alt="Image formed by above method" width="240" height="240" border="10" />
+
+
 
 ```python
 from pyray.shapes.polyhedron import *
@@ -36,19 +36,8 @@ for i in range(0, 31):
 ```
 
 <a href="https://www.youtube.com/watch?v=OV7c6S32IDU" 
-target="_blank"><img src="https://github.com/ryu577/ryu577.github.io/blob/master/Downloads/tetartoid2.gif" 
+target="_blank"><img src="https://s2.gifyu.com/images/tetartoid2.gif" 
 alt="Image formed by above method" width="240" height="240" border="10" /></a>
-
-
-```python
-from pyray.shapes.paraboloid import *
-draw_paraboloids()
-```
-
-<a href="https://www.youtube.com/watch?v=OV7c6S32IDU" 
-target="_blank"><img src="https://github.com/ryu577/ryu577.github.io/blob/master/Downloads/paraboloids.gif" 
-alt="Image formed by above method" width="240" height="240" border="10" /></a>
-
 
 
 ```python
@@ -57,7 +46,7 @@ points_to_bins()
 ```
 
 <a href="https://www.youtube.com/watch?v=OV7c6S32IDU" 
-target="_blank"><img src="https://github.com/ryu577/ryu577.github.io/blob/master/Downloads/classificn/classificn.gif" 
+target="_blank"><img src="https://s2.gifyu.com/images/pointswarm.gif" 
 alt="Image formed by above method" width="240" height="240" border="10" /></a>
 
 
